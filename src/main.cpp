@@ -3,6 +3,12 @@
 
 #include <iostream>
 
+void processInput(GLFWwindow* window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+}
+
 int main()
 {
     if (!glfwInit())
@@ -36,11 +42,17 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {
+		// Input
+        processInput(window);
+
+		// Render
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+		// Swap buffers and poll IO events
         glfwSwapBuffers(window);
         glfwPollEvents();
+
     }
 
     glfwTerminate();
