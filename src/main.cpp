@@ -18,10 +18,10 @@ const char* vertexShaderSource =
 const char* fragmentShaderSource =
 "#version 330 core\n"
 "out vec4 FragColor;\n"
-"in vec4 vertexColor;\n"
+"uniform vec4 ourColor;\n"
 "void main()\n"
 "{\n"
-"   FragColor = vertexColor;\n"
+"   FragColor = ourColor;\n"
 "}\n";
 
 // Function to process input
@@ -180,8 +180,16 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+		// Calculate the green color value based on the current time
+		float timeValue = glfwGetTime();
+		float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+		int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+
 		// Use the shader program for rendering
 		glUseProgram(shaderProgram);
+
+		// Update the uniform color value in the fragment shader
+		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
 		// Bind the vertex array object for rendering
 		glBindVertexArray(vertexArrayObject);
