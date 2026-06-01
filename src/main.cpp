@@ -7,18 +7,21 @@
 const char* vertexShaderSource =
 "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
+"out vec4 vertexColor;\n"
 "void main()\n"
 "{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"   gl_Position = vec4(aPos, 1.0);\n"
+"   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n"
 "}\n";
 
 // Fragment shader source code
 const char* fragmentShaderSource =
 "#version 330 core\n"
 "out vec4 FragColor;\n"
+"in vec4 vertexColor;\n"
 "void main()\n"
 "{\n"
-"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"   FragColor = vertexColor;\n"
 "}\n";
 
 // Function to process input
@@ -62,24 +65,24 @@ int main()
         return -1;
     }
 
- //   float vertices[] = {
- //       -0.5f, -0.5f, 0.0f, // left  
- //        0.5f, -0.5f, 0.0f, // right 
- //        0.0f,  0.5f, 0.0f  // top   
+    float vertices[] = {
+        -0.5f, -0.5f, 0.0f, // left  
+         0.5f, -0.5f, 0.0f, // right 
+         0.0f,  0.5f, 0.0f  // top   
+	};
+
+	//float vertices[] = {
+	//	// first triangle
+	//	0.5f, 0.5f, 0.0f,   // top right
+	//	0.5f, -0.5f, 0.0f,  // bottom right
+	//	-0.5f, -0.5f, 0.0f, // bottom left
+	//	-0.5f, 0.5f, 0.0f   // top left
 	//};
 
-	float vertices[] = {
-		// first triangle
-		0.5f, 0.5f, 0.0f,   // top right
-		0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f, // bottom left
-		-0.5f, 0.5f, 0.0f   // top left
-	};
-
-	unsigned int indices[] = { // note that we start from 0!
-		0, 1, 3, // first triangle
-		1, 2, 3  // second triangle
-	};
+	//unsigned int indices[] = { // note that we start from 0!
+	//	0, 1, 3, // first triangle
+	//	1, 2, 3  // second triangle
+	//};
 
 	// Generate a vertex buffer object (VBO)
     unsigned int vertexBufferObject;
@@ -101,8 +104,8 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	// Bind the element buffer object and copy the index data into it
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObject);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObject);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// Specify the layout of the vertex data
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -184,9 +187,9 @@ int main()
 		glBindVertexArray(vertexArrayObject);
 
 		// Draw the triangle using the currently bound vertex array object and shader program
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// Swap buffers and poll IO events
         glfwSwapBuffers(window);
