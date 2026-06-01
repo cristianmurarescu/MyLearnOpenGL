@@ -119,6 +119,9 @@ int main()
 		float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
 		int vertexColorLocation = glGetUniformLocation(shaderProgram.ID, "ourColor");
 
+		float offset = 0.5f;
+		shaderProgram.setFloat("xOffset", offset);
+
 		// Use the shader program for rendering
 		shaderProgram.use();
 
