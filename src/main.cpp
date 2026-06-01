@@ -114,19 +114,11 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-		// Calculate the green color value based on the current time
-		float timeValue = glfwGetTime();
-		float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-		int vertexColorLocation = glGetUniformLocation(shaderProgram.ID, "ourColor");
-
 		float offset = 0.5f;
-		shaderProgram.setFloat("xOffset", offset);
+		//shaderProgram.setFloat("xOffset", offset);
 
 		// Use the shader program for rendering
 		shaderProgram.use();
-
-		// Update the uniform color value in the fragment shader
-		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
 		// Bind the vertex array object for rendering
 		glBindVertexArray(vertexArrayObject);
