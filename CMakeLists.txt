@@ -28,6 +28,14 @@ find_package(OpenGL REQUIRED)
 # ---------------------------------------------------------------------------
 # Executable
 # ---------------------------------------------------------------------------
-add_executable(LearnOpenGL src/main.cpp)
+add_executable(LearnOpenGL
+    src/main.cpp
+    src/Shader.cpp
+    src/Shader.h
+    src/vertex_shader.glsl
+    src/fragment_shader.glsl)
+
+set_target_properties(LearnOpenGL PROPERTIES
+    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/src")
 
 target_link_libraries(LearnOpenGL PRIVATE glad glfw OpenGL::GL)
