@@ -5,6 +5,8 @@
 
 #include "Shader.h"
 
+#include "stb_image.h"
+
 // Function to process input
 void processInput(GLFWwindow* window)
 {
@@ -47,24 +49,48 @@ int main()
     }
 
 	float vertices[] = {
-		// positions         // colors
-		 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-		 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+		// positions          // colors           // texture coords
+		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
 	};
 
-	//float vertices[] = {
-	//	// first triangle
-	//	0.5f, 0.5f, 0.0f,   // top right
-	//	0.5f, -0.5f, 0.0f,  // bottom right
-	//	-0.5f, -0.5f, 0.0f, // bottom left
-	//	-0.5f, 0.5f, 0.0f   // top left
-	//};
+	// Generate a texture object and bind it to the GL_TEXTURE_2D target
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
-	//unsigned int indices[] = { // note that we start from 0!
-	//	0, 1, 3, // first triangle
-	//	1, 2, 3  // second triangle
-	//};
+	// Set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // Set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	// Set the texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// Load the texture image using stb_image
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+
+	if (data)
+	{
+		// Set the texture wrapping parameters
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+
+	// Free the image data after generating the texture
+	stbi_image_free(data);
+
+	unsigned int indices[] = { // note that we start from 0!
+		0, 1, 3, // first triangle
+		1, 2, 3  // second triangle
+	};
 
 	// Generate a vertex buffer object (VBO)
     unsigned int vertexBufferObject;
@@ -86,17 +112,21 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	// Bind the element buffer object and copy the index data into it
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObject);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObject);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// Specify the layout of the vertex data
 	// Position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	// Color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	// Texture coordinate attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	// Create a shader program from the vertex and fragment shader source files
 	Shader shaderProgram("vertex_shader.glsl", "fragment_shader.glsl");
@@ -119,25 +149,35 @@ int main()
 		float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
 		int vertexColorLocation = glGetUniformLocation(shaderProgram.ID, "ourColor");
 
+		// Bind the texture for rendering
+		glBindTexture(GL_TEXTURE_2D, texture);
+
 		// Use the shader program for rendering
 		shaderProgram.use();
 
 		// Update the uniform color value in the fragment shader
 		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
+
+
 		// Bind the vertex array object for rendering
 		glBindVertexArray(vertexArrayObject);
 
 		// Draw the triangle using the currently bound vertex array object and shader program
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		//glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// Swap buffers and poll IO events
         glfwSwapBuffers(window);
         glfwPollEvents();
 
     }
+
+	// Optional: de-allocate all resources once they've outlived their purpose
+	glDeleteVertexArrays(1, &vertexArrayObject);
+	glDeleteBuffers(1, &vertexBufferObject);
+	glDeleteBuffers(1, &elementBufferObject);
 
 	// Clean up and exit
     glfwTerminate();
