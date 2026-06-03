@@ -56,8 +56,10 @@ int main()
 		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
 	};
 
+	// Texture 1
 	// Generate a texture object and bind it to the GL_TEXTURE_2D target
 	unsigned int texture;
+	glActiveTexture(GL_TEXTURE0); // Activate the texture unit before binding the texture
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -77,6 +79,40 @@ int main()
 	{
 		// Set the texture wrapping parameters
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+
+	// Free the image data after generating the texture
+	stbi_image_free(data);
+
+	stbi_set_flip_vertically_on_load(true); // Flip the texture image vertically on load to match OpenGL's coordinate system
+
+	// Texture 2
+	// Generate a texture object and bind it to the GL_TEXTURE_2D target
+	unsigned int texture2;
+	glActiveTexture(GL_TEXTURE1); // Activate the texture unit before binding the texture
+	glGenTextures(1, &texture2);
+	glBindTexture(GL_TEXTURE_2D, texture2);
+
+	// Set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // Set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	// Set the texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// Load the texture image using stb_image
+	data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
+
+	if (data)
+	{
+		// Set the texture wrapping parameters
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
@@ -131,6 +167,12 @@ int main()
 	// Create a shader program from the vertex and fragment shader source files
 	Shader shaderProgram("vertex_shader.glsl", "fragment_shader.glsl");
 
+	// Activate the shader program before setting any uniforms
+	shaderProgram.use();
+	shaderProgram.setInt("texture1", 0); // Set the texture uniform to the corresponding texture unit
+	shaderProgram.setInt("texture2", 1); // Set the texture uniform to the corresponding texture unit
+
+
 	// Create the viewport and set its dimensions (x, y, width, height)
 	glViewport(0, 0, 800, 600);
 
@@ -150,7 +192,7 @@ int main()
 		int vertexColorLocation = glGetUniformLocation(shaderProgram.ID, "ourColor");
 
 		// Bind the texture for rendering
-		glBindTexture(GL_TEXTURE_2D, texture);
+		//glBindTexture(GL_TEXTURE_2D, texture);
 
 		// Use the shader program for rendering
 		shaderProgram.use();
