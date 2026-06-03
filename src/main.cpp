@@ -177,6 +177,12 @@ int main()
 	shaderProgram.setInt("texture1", 0); // Set the texture uniform to the corresponding texture unit
 	shaderProgram.setInt("texture2", 1); // Set the texture uniform to the corresponding texture unit
 
+	glm::mat4 transformMatrix = glm::mat4(1.0f); // Initialize the transformation matrix to the identity matrix
+	transformMatrix = glm::rotate(transformMatrix, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f)); // Rotate the transformation matrix by 90 degrees around the Z-axis
+	transformMatrix = glm::scale(transformMatrix, glm::vec3(0.5f, 0.5f, 0.5f)); // Scale the transformation matrix by a factor of 0.5 in all dimensions)
+
+	unsigned int transformMatrixLocation = glGetUniformLocation(shaderProgram.ID, "transform"); // Get the location of the transformation matrix uniform in the shader program
+	shaderProgram.setMat4("transform", transformMatrix); // Set the value of the transformation matrix uniform in the shader program
 
 	// Create the viewport and set its dimensions (x, y, width, height)
 	glViewport(0, 0, 800, 600);
