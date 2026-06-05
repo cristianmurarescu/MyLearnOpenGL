@@ -32,6 +32,8 @@ add_executable(LearnOpenGL
     src/main.cpp
     src/Shader.cpp
     src/Shader.h
+    src/stb_image.cpp
+    src/stb_image.h
     src/vertex_shader.glsl
     src/fragment_shader.glsl)
 
