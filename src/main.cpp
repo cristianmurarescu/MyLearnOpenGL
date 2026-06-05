@@ -50,10 +50,10 @@ int main()
 
 	float vertices[] = {
 		// positions          // colors           // texture coords
-		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.75f, 0.75f,   // top right
+		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.75f, 0.25f,   // bottom right
+		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.25f, 0.25f,   // bottom left
+		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.25f, 0.75f    // top left 
 	};
 
 	// Texture 1
@@ -68,8 +68,8 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	// Set the texture filtering parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// Load the texture image using stb_image
 	int width, height, nrChannels;
@@ -103,8 +103,8 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	// Set the texture filtering parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// Load the texture image using stb_image
 	data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
@@ -176,6 +176,8 @@ int main()
 	// Create the viewport and set its dimensions (x, y, width, height)
 	glViewport(0, 0, 800, 600);
 
+	float mixAmount = 0.0f;
+
 	// Render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -186,20 +188,37 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-		// Calculate the green color value based on the current time
-		float timeValue = glfwGetTime();
-		float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
 		int vertexColorLocation = glGetUniformLocation(shaderProgram.ID, "ourColor");
 
-		// Bind the texture for rendering
-		//glBindTexture(GL_TEXTURE_2D, texture);
+		int mixAmountLocation = glGetUniformLocation(shaderProgram.ID, "mixAmount");
+
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		{
+			if (mixAmount >= 1.0f)
+			{
+				mixAmount = 1.0f;
+			}
+			else
+			{
+				mixAmount += 0.01f;
+			}
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+		{
+			if (mixAmount <= 0.0f)
+			{
+				mixAmount = 0.0f;
+			}
+			else
+			{
+				mixAmount -= 0.01f;
+			}
+		}
+		glUniform1f(mixAmountLocation, mixAmount);
 
 		// Use the shader program for rendering
 		shaderProgram.use();
-
-		// Update the uniform color value in the fragment shader
-		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-
 
 
 		// Bind the vertex array object for rendering
