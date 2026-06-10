@@ -101,6 +101,19 @@ int main()
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
 
+	// Define the positions of multiple cubes in the scene
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
 
 	// Texture 1
 	// Generate a texture object and bind it to the GL_TEXTURE_2D target
@@ -274,8 +287,17 @@ int main()
 		// Bind the vertex array object for rendering
 		glBindVertexArray(vertexArrayObject);
 
-		// Draw the triangle using the currently bound vertex array object and shader program
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		for (unsigned int i = 0; i < 10; i++)
+		{
+			glm::mat4 model = glm::mat4(1.0f); // Initialize the model matrix to the identity matrix)
+			model = glm::translate(model, cubePositions[i]); // Translate the model matrix by the position of the current cube
+			float angle = 20.0f * i; // Calculate the rotation angle for the current cube based on its index
+			model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f)); // Rotate the model matrix by an angle that changes over time around the axis (1.0, 0.3, 0.5)
+			shaderProgram.setMat4("model", model); // Set the value of the model matrix uniform in the shader program for the current cube)
+			// Draw the triangle using the currently bound vertex array object and shader program
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+
 
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
