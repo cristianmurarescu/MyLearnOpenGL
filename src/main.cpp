@@ -12,11 +12,27 @@
 
 #include "stb_image.h"
 
+
+glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, 3.0f); // Define the position of the camera in world space
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f); // Define the direction the camera is facing in world space
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); // Define the up vector for the camera in world space
+
+
 // Function to process input
 void processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+	const float cameraSpeed = 0.05f; // Adjust accordingly
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		cameraPosition += cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		cameraPosition -= cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		cameraPosition -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		cameraPosition += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 }
 
 int main()
@@ -114,16 +130,6 @@ int main()
 		glm::vec3(1.5f,  0.2f, -1.5f),
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
-
-	glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, 3.0f); // Define the position of the camera in world space
-	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f); // Define the target point that the camera is looking at in world space
-	glm::vec3 cameraDirection = glm::normalize(cameraPosition - cameraTarget); // Calculate the direction vector from the camera to the target point
-
-	glm::vec3 upVector = glm::vec3(0.0f, 1.0f, 0.0f); // Define the up vector for the camera in world space
-	glm::vec3 cameraRight = glm::normalize(glm::cross(upVector, cameraDirection)); // Calculate the right vector for the camera by taking the cross product of the up vector and the camera direction vector
-
-	glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight); // Calculate the up vector for the camera by taking the cross product of the camera direction vector and the camera right vector
-
 
 	// Texture 1
 	// Generate a texture object and bind it to the GL_TEXTURE_2D target
@@ -282,10 +288,7 @@ int main()
 		int modelLocation = glGetUniformLocation(shaderProgram.ID, "model"); // Get the location of the model matrix uniform in the shader program
 		shaderProgram.setMat4("model", model); // Set the value of the model matrix uniform in the shader program)
 
-		const float radius = 10.0f; // Define the radius of the circular path for the camera
-		float camX = sin(glfwGetTime()) * radius; // Calculate the X coordinate of the camera position based on the sine of the current time multiplied by the radius
-		float camZ = cos(glfwGetTime()) * radius; // Calculate the Z coordinate of the camera position based on the cosine of the current time multiplied by the radius
-		view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), cameraTarget, cameraUp); // Update the view matrix using the lookAt function with the new camera position, target point, and up vector
+		view = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp); // Create a view matrix using the lookAt function with the camera position, target point (camera position + front vector), and up vector
 
 		int viewLocation = glGetUniformLocation(shaderProgram.ID, "view"); // Get the location of the view matrix uniform in the shader program
 		shaderProgram.setMat4("view", view); // Set the value of the view matrix uniform in the shader program
