@@ -21,10 +21,17 @@ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); // Define the up vector for th
 // Function to process input
 void processInput(GLFWwindow* window)
 {
+	float deltaTime = 0.0f; // Time between current frame and last frame
+	float lastFrame = 0.0f; // Time of last frame
+
+	float currentFrame = glfwGetTime(); // Get the current time
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-	const float cameraSpeed = 0.05f; // Adjust accordingly
+	const float cameraSpeed = 0.05f * deltaTime; // Adjust accordingly
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		cameraPosition += cameraSpeed * cameraFront;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
