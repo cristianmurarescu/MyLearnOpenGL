@@ -268,13 +268,10 @@ int main()
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f); // Create a perspective projection matrix with a field of view of 45 degrees, an aspect ratio of 800/600, and near and far clipping planes at 0.1 and 100.0 units, respectively))
 
-		int modelLocation = glGetUniformLocation(shaderProgram.ID, "model"); // Get the location of the model matrix uniform in the shader program
 		shaderProgram.setMat4("model", model); // Set the value of the model matrix uniform in the shader program)
 
-		int viewLocation = glGetUniformLocation(shaderProgram.ID, "view"); // Get the location of the view matrix uniform in the shader program
 		shaderProgram.setMat4("view", view); // Set the value of the view matrix uniform in the shader program
 			
-		int projectionLocation = glGetUniformLocation(shaderProgram.ID, "projection"); // Get the location of the projection matrix uniform in the shader program
 		shaderProgram.setMat4("projection", projection); // Set the value of the projection matrix uniform in the shader program")
 
 		glm::mat4 transformMatrix = glm::mat4(1.0f); // Initialize the transformation matrix to the identity matrix
@@ -291,8 +288,13 @@ int main()
 		{
 			glm::mat4 model = glm::mat4(1.0f); // Initialize the model matrix to the identity matrix)
 			model = glm::translate(model, cubePositions[i]); // Translate the model matrix by the position of the current cube
-			float angle = 20.0f * i; // Calculate the rotation angle for the current cube based on its index
-			model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f)); // Rotate the model matrix by an angle that changes over time around the axis (1.0, 0.3, 0.5)
+			float angle = 20.0f * (i + 1); // Calculate the rotation angle for the current cube based on its index
+			
+			if (i % 2 == 0)
+			{
+				model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f)); // Rotate the model matrix by an angle that changes over time around the axis (1.0, 0.3, 0.5)
+			}
+
 			shaderProgram.setMat4("model", model); // Set the value of the model matrix uniform in the shader program for the current cube)
 			// Draw the triangle using the currently bound vertex array object and shader program
 			glDrawArrays(GL_TRIANGLES, 0, 36);
