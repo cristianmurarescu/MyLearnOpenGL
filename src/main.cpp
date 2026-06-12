@@ -53,6 +53,7 @@ int main()
         return -1;
     }
 
+	// First square
 	float vertices[] = {
 		// positions          // colors           // texture coords
 		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
@@ -60,6 +61,14 @@ int main()
 		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
 		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
 	};
+
+	//float vertices2[] = {
+	//	// positions             // colors           // texture coords
+	//	-0.2f,  0.8f, 0.0f,      1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+	//	-0.2f,  0.2f, 0.0f,      0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+	//	-0.8f,  0.2f, 0.0f,      0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+	//	-0.8f,  0.8f, 0.0f,      1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left
+	//};
 
 	// Texture 1
 	// Generate a texture object and bind it to the GL_TEXTURE_2D target
@@ -202,17 +211,11 @@ int main()
 		shaderProgram.use();
 
 		glm::mat4 transformMatrix = glm::mat4(1.0f); // Initialize the transformation matrix to the identity matrix
-		transformMatrix = glm::translate(transformMatrix, glm::vec3(0.5f, -0.5f, 0.0f)); // Rotate the transformation matrix by 90 degrees around the Z-axis
+		transformMatrix = glm::translate(transformMatrix, glm::vec3(0.5f, -0.5f, 0.0f));
 		transformMatrix = glm::rotate(transformMatrix, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f)); // Scale the transformation matrix by a factor of 0.5 in all dimensions)
 
 		unsigned int transformMatrixLocation = glGetUniformLocation(shaderProgram.ID, "transform"); // Get the location of the transformation matrix uniform in the shader program
 		shaderProgram.setMat4("transform", transformMatrix); // Set the value of the transformation matrix uniform in the shader program
-
-
-		// Update the uniform color value in the fragment shader
-		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-
-
 
 		// Bind the vertex array object for rendering
 		glBindVertexArray(vertexArrayObject);
@@ -221,6 +224,23 @@ int main()
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		glm::mat4 transformMatrix2 = glm::mat4(1.0f); // Initialize the transformation matrix to the identity matrix
+		transformMatrix2 = glm::translate(transformMatrix2, glm::vec3(-0.5f, 0.5f, 0.0f));
+		transformMatrix2 = glm::scale(transformMatrix2, sin(timeValue) * glm::vec3(0.5f)); // Scale the transformation matrix by a factor of 0.5 in all dimensions)
+
+		unsigned int transformMatrixLocation2 = glGetUniformLocation(shaderProgram.ID, "transform"); // Get the location of the transformation matrix uniform in the shader program
+		shaderProgram.setMat4("transform", transformMatrix2); // Set the value of the transformation matrix uniform in the shader program
+
+		// Bind the vertex array object for rendering
+		glBindVertexArray(vertexArrayObject);
+
+		// Draw the triangle using the currently bound vertex array object and shader program
+		//glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+
 
 		// Swap buffers and poll IO events
         glfwSwapBuffers(window);
