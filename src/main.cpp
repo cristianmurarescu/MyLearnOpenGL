@@ -292,22 +292,18 @@ int main()
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f); // Create a perspective projection matrix with a field of view of 45 degrees, an aspect ratio of 800/600, and near and far clipping planes at 0.1 and 100.0 units, respectively))
 
-		int modelLocation = glGetUniformLocation(shaderProgram.ID, "model"); // Get the location of the model matrix uniform in the shader program
 		shaderProgram.setMat4("model", model); // Set the value of the model matrix uniform in the shader program)
 
 		view = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp); // Create a view matrix using the lookAt function with the camera position, target point (camera position + front vector), and up vector
 
-		int viewLocation = glGetUniformLocation(shaderProgram.ID, "view"); // Get the location of the view matrix uniform in the shader program
 		shaderProgram.setMat4("view", view); // Set the value of the view matrix uniform in the shader program
 		
-		int projectionLocation = glGetUniformLocation(shaderProgram.ID, "projection"); // Get the location of the projection matrix uniform in the shader program
 		shaderProgram.setMat4("projection", projection); // Set the value of the projection matrix uniform in the shader program")
 
 		glm::mat4 transformMatrix = glm::mat4(1.0f); // Initialize the transformation matrix to the identity matrix
 		transformMatrix = glm::translate(transformMatrix, glm::vec3(0.5f, -0.5f, 0.0f)); // Rotate the transformation matrix by 90 degrees around the Z-axis
 		transformMatrix = glm::rotate(transformMatrix, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f)); // Scale the transformation matrix by a factor of 0.5 in all dimensions)
 
-		unsigned int transformMatrixLocation = glGetUniformLocation(shaderProgram.ID, "transform"); // Get the location of the transformation matrix uniform in the shader program
 		shaderProgram.setMat4("transform", transformMatrix); // Set the value of the transformation matrix uniform in the shader program
 
 		// Bind the vertex array object for rendering
