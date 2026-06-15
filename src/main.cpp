@@ -17,6 +17,15 @@ glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, 3.0f); // Define the position o
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f); // Define the direction the camera is facing in world space
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); // Define the up vector for the camera in world space
 
+float yaw = -90.0f; // Initialize the yaw angle for the camera
+float pitch = 0.0f; // Initialize the pitch angle for the camera
+
+bool firstMouse = true; // Flag to check if this is the first mouse movement
+
+float lastMouseX = 400.0f; // Initialize the last mouse X position to the center of the window
+float lastMouseY = 300.0f; // Initialize the last mouse Y position to the center of the window
+
+float fov = 45.0f; // Initialize the field of view for the camera
 
 // Function to process input
 void processInput(GLFWwindow* window)
@@ -40,6 +49,48 @@ void processInput(GLFWwindow* window)
 		cameraPosition -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		cameraPosition += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (firstMouse)
+	{
+		lastMouseX = xpos;
+		lastMouseY = ypos;
+		firstMouse = false;
+	}
+
+	float xOffset = xpos - lastMouseX;
+	float yOffset = lastMouseY - ypos;
+	lastMouseX = xpos;
+	lastMouseY = ypos;
+
+	const float sensitivity = 0.1f;
+	xOffset *= sensitivity;
+	yOffset *= sensitivity;
+
+	yaw += xOffset;
+	pitch += yOffset;
+
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	glm::vec3 cameraDirection;
+	cameraDirection.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cameraDirection.y = sin(glm::radians(pitch));
+	cameraDirection.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cameraFront = glm::normalize(cameraDirection);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	fov -= (float)yoffset;
+	if (fov < 1.0f)
+		fov = 1.0f;
+	if (fov > 45.0f)
+		fov = 45.0f;
 }
 
 int main()
@@ -67,6 +118,10 @@ int main()
 
 	// Make the OpenGL context of the window current on the calling thread
     glfwMakeContextCurrent(window);
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // Hide the cursor and capture it for camera movement
+	glfwSetCursorPosCallback(window, mouse_callback); // Set the mouse callback function to handle mouse movement
+	glfwSetScrollCallback(window, scroll_callback); // Set the scroll callback function to handle mouse scroll events)
 
 	// Load all OpenGL function pointers using GLAD
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -290,7 +345,7 @@ int main()
 
 		// Create the view matrix and apply transformations to it
 		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f); // Create a perspective projection matrix with a field of view of 45 degrees, an aspect ratio of 800/600, and near and far clipping planes at 0.1 and 100.0 units, respectively))
+		projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f); // Create a perspective projection matrix with a field of view of 45 degrees, an aspect ratio of 800/600, and near and far clipping planes at 0.1 and 100.0 units, respectively))
 
 		shaderProgram.setMat4("model", model); // Set the value of the model matrix uniform in the shader program)
 
