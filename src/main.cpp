@@ -117,49 +117,49 @@ int main()
 	// Enable depth testing for correct rendering of 3D objects
 	glEnable(GL_DEPTH_TEST);
 
-	// Define the vertex data for a cube, including position and texture coordinates
+	// Define the vertex data for a cube (XYZ)
 	float vertices[] = {
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f,  0.5f, -0.5f,
+		 0.5f,  0.5f, -0.5f,
+		-0.5f,  0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
 
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,
+		 0.5f, -0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+		-0.5f, -0.5f,  0.5f,
 
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
 
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
 
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f,  0.5f,
+		 0.5f, -0.5f,  0.5f,
+		-0.5f, -0.5f,  0.5f,
+		-0.5f, -0.5f, -0.5f,
 
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+		-0.5f,  0.5f, -0.5f,
+		 0.5f,  0.5f, -0.5f,
+		 0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f, -0.5f
 	};
 
 	// Define the positions of multiple cubes in the scene
@@ -273,7 +273,7 @@ int main()
 
 	// Specify the layout of the vertex data
 	// Position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	// Color attribute
@@ -281,8 +281,8 @@ int main()
 	//glEnableVertexAttribArray(1);
 
 	// Texture coordinate attribute
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(3 * sizeof(float)));
+	//glEnableVertexAttribArray(1);
 
 	// Create a shader program from the vertex and fragment shader source files
 	Shader shaderProgram("vertex_shader.glsl", "fragment_shader.glsl");
