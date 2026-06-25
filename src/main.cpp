@@ -31,6 +31,8 @@ float fov = 45.0f; // Initialize the field of view for the camera
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f)); // Create a Camera object with the initial position))
 
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+
 // Function to process input
 void processInput(GLFWwindow* window)
 {
@@ -271,6 +273,14 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObject);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// Generate a light vertex array object (VAO) for the light source
+	unsigned int lightVertexArrayObject;
+	glGenVertexArrays(1, &lightVertexArrayObject);
+	glBindVertexArray(lightVertexArrayObject);
+
 	// Specify the layout of the vertex data
 	// Position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -291,6 +301,8 @@ int main()
 	shaderProgram.use();
 	shaderProgram.setInt("texture1", 0); // Set the texture uniform to the corresponding texture unit
 	shaderProgram.setInt("texture2", 1); // Set the texture uniform to the corresponding texture unit
+
+	Shader lightShaderProgram("light_vs.glsl", "light_fs.glsl");
 
 	// Create the viewport and set its dimensions (x, y, width, height)
 	glViewport(0, 0, 800, 600);
@@ -316,47 +328,32 @@ int main()
 		// Use the shader program for rendering
 		shaderProgram.use();
 
-		// Create the model matrix and apply transformations to it
-		glm::mat4 model = glm::mat4(1.0f); // Initialize the model matrix to the identity matrix
-		//model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // Rotate the model matrix by -55 degrees around the X-axis
-		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f)); // Rotate the model matrix by an angle that changes over time around the axis (0.5, 1.0, 0.0)
+		shaderProgram.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+		shaderProgram.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 
-		// Create the view matrix and apply transformations to it
-		glm::mat4 view; // Initialize the view matrix to the identity matrix
-		//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); // Translate the view matrix by (0, 0, -3) to move the camera back along the Z-axis
-		//view = glm::lookAt(cameraPosition, cameraTarget, cameraUp); // Create a view matrix using the lookAt function with the camera position, target point, and up vector
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		shaderProgram.setMat4("projection", projection);
+		shaderProgram.setMat4("view", view);
 
-		// Create the view matrix and apply transformations to it
-		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f); // Create a perspective projection matrix with a field of view of 45 degrees, an aspect ratio of 800/600, and near and far clipping planes at 0.1 and 100.0 units, respectively))
-
-		shaderProgram.setMat4("model", model); // Set the value of the model matrix uniform in the shader program)
-
-		view = camera.GetViewMatrix(); // Get the view matrix from the camera object
-
-		shaderProgram.setMat4("view", view); // Set the value of the view matrix uniform in the shader program
-		
-		shaderProgram.setMat4("projection", projection); // Set the value of the projection matrix uniform in the shader program")
-
-		glm::mat4 transformMatrix = glm::mat4(1.0f); // Initialize the transformation matrix to the identity matrix
-		transformMatrix = glm::translate(transformMatrix, glm::vec3(0.5f, -0.5f, 0.0f)); // Rotate the transformation matrix by 90 degrees around the Z-axis
-		transformMatrix = glm::rotate(transformMatrix, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f)); // Scale the transformation matrix by a factor of 0.5 in all dimensions)
-
-		shaderProgram.setMat4("transform", transformMatrix); // Set the value of the transformation matrix uniform in the shader program
+		glm::mat4 model = glm::mat4(1.0f);
+		shaderProgram.setMat4("model", model);
 
 		// Bind the vertex array object for rendering
 		glBindVertexArray(vertexArrayObject);
+		glDrawArrays(GL_TRIANGLES, 0, 36); // Draw the cube using the vertex array object and the specified number of vertices
 
-		for (unsigned int i = 0; i < 10; i++)
-		{
-			glm::mat4 model = glm::mat4(1.0f); // Initialize the model matrix to the identity matrix)
-			model = glm::translate(model, cubePositions[i]); // Translate the model matrix by the position of the current cube
-			float angle = 20.0f * i; // Calculate the rotation angle for the current cube based on its index
-			model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f)); // Rotate the model matrix by an angle that changes over time around the axis (1.0, 0.3, 0.5)
-			shaderProgram.setMat4("model", model); // Set the value of the model matrix uniform in the shader program for the current cube)
-			// Draw the triangle using the currently bound vertex array object and shader program
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
+		// Draw light object
+		lightShaderProgram.use();
+		lightShaderProgram.setMat4("projection", projection);
+		lightShaderProgram.setMat4("view", view);
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, lightPos);
+		model = glm::scale(model, glm::vec3(0.2f));
+		lightShaderProgram.setMat4("model", model);
+
+		glBindVertexArray(lightVertexArrayObject);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
