@@ -12,6 +12,8 @@
 
 #include "stb_image.h"
 
+#include "Camera.h"
+
 
 glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, 3.0f); // Define the position of the camera in world space
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f); // Define the direction the camera is facing in world space
@@ -27,6 +29,8 @@ float lastMouseY = 300.0f; // Initialize the last mouse Y position to the center
 
 float fov = 45.0f; // Initialize the field of view for the camera
 
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f)); // Create a Camera object with the initial position))
+
 // Function to process input
 void processInput(GLFWwindow* window)
 {
@@ -40,15 +44,14 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-	const float cameraSpeed = 0.05f * deltaTime; // Adjust accordingly
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		cameraPosition += cameraSpeed * cameraFront;
+		camera.ProcessKeyboard(FORWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		cameraPosition -= cameraSpeed * cameraFront;
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		cameraPosition -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		cameraPosition += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
@@ -65,32 +68,12 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	lastMouseX = xpos;
 	lastMouseY = ypos;
 
-	const float sensitivity = 0.1f;
-	xOffset *= sensitivity;
-	yOffset *= sensitivity;
-
-	yaw += xOffset;
-	pitch += yOffset;
-
-	if (pitch > 89.0f)
-		pitch = 89.0f;
-	if (pitch < -89.0f)
-		pitch = -89.0f;
-
-	glm::vec3 cameraDirection;
-	cameraDirection.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	cameraDirection.y = sin(glm::radians(pitch));
-	cameraDirection.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	cameraFront = glm::normalize(cameraDirection);
+	camera.ProcessMouseMovement(xOffset, yOffset);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	fov -= (float)yoffset;
-	if (fov < 1.0f)
-		fov = 1.0f;
-	if (fov > 45.0f)
-		fov = 45.0f;
+	camera.ProcessMouseScroll(yoffset);
 }
 
 int main()
@@ -345,11 +328,11 @@ int main()
 
 		// Create the view matrix and apply transformations to it
 		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f); // Create a perspective projection matrix with a field of view of 45 degrees, an aspect ratio of 800/600, and near and far clipping planes at 0.1 and 100.0 units, respectively))
+		projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f); // Create a perspective projection matrix with a field of view of 45 degrees, an aspect ratio of 800/600, and near and far clipping planes at 0.1 and 100.0 units, respectively))
 
 		shaderProgram.setMat4("model", model); // Set the value of the model matrix uniform in the shader program)
 
-		view = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp); // Create a view matrix using the lookAt function with the camera position, target point (camera position + front vector), and up vector
+		view = camera.GetViewMatrix(); // Get the view matrix from the camera object
 
 		shaderProgram.setMat4("view", view); // Set the value of the view matrix uniform in the shader program
 		
