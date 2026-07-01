@@ -119,49 +119,49 @@ int main()
 	// Enable depth testing for correct rendering of 3D objects
 	glEnable(GL_DEPTH_TEST);
 
-	// Define the vertex data for a cube (XYZ)
+	// Define the vertex data for a cube (XYZ, normals XYZ)
 	float vertices[] = {
-		-0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		-0.5f,  0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-		-0.5f, -0.5f,  0.5f,
-		 0.5f, -0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
-		-0.5f, -0.5f,  0.5f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
 
-		-0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-		 0.5f,  0.5f,  0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-		-0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f,  0.5f,
-		 0.5f, -0.5f,  0.5f,
-		-0.5f, -0.5f,  0.5f,
-		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-		-0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f, -0.5f
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 	};
 
 	// Define the positions of multiple cubes in the scene
@@ -251,39 +251,44 @@ int main()
 	};
 
 	// Generate a vertex buffer object (VBO)
-    unsigned int vertexBufferObject;
-	glGenBuffers(1, &vertexBufferObject);
+    unsigned int VBO;
+	glGenBuffers(1, &VBO);
 
 	// Generate a element buffer object (EBO)
-	unsigned int elementBufferObject;
-	glGenBuffers(1, &elementBufferObject);
+	//unsigned int EBO;
+	//glGenBuffers(1, &EBO);
 
 	// Generate a vertex array object (VAO)
-	unsigned int vertexArrayObject;
-	glGenVertexArrays(1, &vertexArrayObject);
+	unsigned int cubeVAO;
+	glGenVertexArrays(1, &cubeVAO);
 
 	// Bind the vertex array object for rendering
-	glBindVertexArray(vertexArrayObject);
+	glBindVertexArray(cubeVAO);
 	
 	// Bind the vertex buffer object and copy the vertex data into it
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	// Bind the element buffer object and copy the index data into it
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObject);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
 	// Generate a light vertex array object (VAO) for the light source
-	unsigned int lightVertexArrayObject;
-	glGenVertexArrays(1, &lightVertexArrayObject);
-	glBindVertexArray(lightVertexArrayObject);
+	unsigned int lightVAO;
+	glGenVertexArrays(1, &lightVAO);
+	glBindVertexArray(lightVAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 	// Specify the layout of the vertex data
 	// Position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	// Color attribute
@@ -295,14 +300,8 @@ int main()
 	//glEnableVertexAttribArray(1);
 
 	// Create a shader program from the vertex and fragment shader source files
-	Shader shaderProgram("vertex_shader.glsl", "fragment_shader.glsl");
-
-	// Activate the shader program before setting any uniforms
-	shaderProgram.use();
-	shaderProgram.setInt("texture1", 0); // Set the texture uniform to the corresponding texture unit
-	shaderProgram.setInt("texture2", 1); // Set the texture uniform to the corresponding texture unit
-
-	Shader lightShaderProgram("light_vs.glsl", "light_fs.glsl");
+	Shader lightingShader("lighting_vs.glsl", "lighting_fs.glsl");
+	Shader lightCubeShader("light_vs.glsl", "light_fs.glsl");
 
 	// Create the viewport and set its dimensions (x, y, width, height)
 	glViewport(0, 0, 800, 600);
@@ -317,42 +316,34 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// Calculate the green color value based on the current time
-		float timeValue = glfwGetTime();
-		float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-		int vertexColorLocation = glGetUniformLocation(shaderProgram.ID, "ourColor");
-
-		// Bind the texture for rendering
-		//glBindTexture(GL_TEXTURE_2D, texture);
-
 		// Use the shader program for rendering
-		shaderProgram.use();
-
-		shaderProgram.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-		shaderProgram.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+		lightingShader.use();
+		lightingShader.setVec3("lightPos", lightPos);
+		lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+		lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
-		shaderProgram.setMat4("projection", projection);
-		shaderProgram.setMat4("view", view);
+		lightingShader.setMat4("projection", projection);
+		lightingShader.setMat4("view", view);
 
 		glm::mat4 model = glm::mat4(1.0f);
-		shaderProgram.setMat4("model", model);
+		lightingShader.setMat4("model", model);
 
 		// Bind the vertex array object for rendering
-		glBindVertexArray(vertexArrayObject);
-		glDrawArrays(GL_TRIANGLES, 0, 36); // Draw the cube using the vertex array object and the specified number of vertices
+		glBindVertexArray(cubeVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		// Draw light object
-		lightShaderProgram.use();
-		lightShaderProgram.setMat4("projection", projection);
-		lightShaderProgram.setMat4("view", view);
+		lightCubeShader.use();
+		lightCubeShader.setMat4("projection", projection);
+		lightCubeShader.setMat4("view", view);
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, lightPos);
 		model = glm::scale(model, glm::vec3(0.2f));
-		lightShaderProgram.setMat4("model", model);
+		lightCubeShader.setMat4("model", model);
 
-		glBindVertexArray(lightVertexArrayObject);
+		glBindVertexArray(lightVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
@@ -365,9 +356,10 @@ int main()
     }
 
 	// Optional: de-allocate all resources once they've outlived their purpose
-	glDeleteVertexArrays(1, &vertexArrayObject);
-	glDeleteBuffers(1, &vertexBufferObject);
-	glDeleteBuffers(1, &elementBufferObject);
+	glDeleteVertexArrays(1, &cubeVAO);
+	glDeleteVertexArrays(1, &lightVAO);
+	glDeleteBuffers(1, &VBO);
+	//glDeleteBuffers(1, &EBO);
 
 	// Clean up and exit
     glfwTerminate();
