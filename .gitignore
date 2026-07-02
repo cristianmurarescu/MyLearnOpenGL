@@ -22,7 +22,8 @@ CPackSourceConfig.cmake
 Makefile
 
 # Downloaded/extracted dependencies
-glm/
+# glm/ is vendored (glm/include + glm/src) and committed; keep the raw extract out.
+glm-0.9.8.5/
 stb/
 *.zip
 

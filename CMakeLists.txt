@@ -48,10 +48,13 @@ add_executable(LearnOpenGL
     src/main.cpp
     src/Shader.cpp
     src/Shader.h
+    src/Camera.h
     src/stb_image.cpp
     src/stb_image.h
-    src/vertex_shader.glsl
-    src/fragment_shader.glsl)
+    src/lighting_vs.glsl
+    src/lighting_fs.glsl
+    src/light_vs.glsl
+    src/light_fs.glsl)
 
 set_target_properties(LearnOpenGL PROPERTIES
     VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/src")
