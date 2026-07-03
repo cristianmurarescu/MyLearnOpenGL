@@ -320,7 +320,10 @@ int main()
 		lightingShader.use();
 
 		float currentFrame = glfwGetTime();
-		lightPos.y = glm::sin(currentFrame);
+		float orbitRadius = 2.0f;
+		lightPos.x = glm::cos(currentFrame) * orbitRadius;
+		lightPos.z = glm::sin(currentFrame) * orbitRadius;
+		lightPos.y = 1.0f;
 
 		lightingShader.setVec3("lightPos", lightPos);
 		lightingShader.setVec3("viewPos", camera.Position);
