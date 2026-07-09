@@ -215,35 +215,35 @@ int main()
 
 	// Texture 2
 	// Generate a texture object and bind it to the GL_TEXTURE_2D target
-	//unsigned int texture2;
-	//glActiveTexture(GL_TEXTURE1); // Activate the texture unit before binding the texture
-	//glGenTextures(1, &texture2);
-	//glBindTexture(GL_TEXTURE_2D, texture2);
+	unsigned int specularTexture;
+	glActiveTexture(GL_TEXTURE1); // Activate the texture unit before binding the texture
+	glGenTextures(1, &specularTexture);
+	glBindTexture(GL_TEXTURE_2D, specularTexture);
 
-	//// Set the texture wrapping parameters
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // Set texture wrapping to GL_REPEAT (default wrapping method)
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// Set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // Set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	//// Set the texture filtering parameters
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// Set the texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	//// Load the texture image using stb_image
-	//data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
+	// Load the texture image using stb_image
+	data = stbi_load("container2_specular.png", &width, &height, &nrChannels, 0);
 
-	//if (data)
-	//{
-	//	// Set the texture wrapping parameters
-	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	//	glGenerateMipmap(GL_TEXTURE_2D);
-	//}
-	//else
-	//{
-	//	std::cout << "Failed to load texture" << std::endl;
-	//}
+	if (data)
+	{
+		// Set the texture wrapping parameters
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
 
-	//// Free the image data after generating the texture
-	//stbi_image_free(data);
+	// Free the image data after generating the texture
+	stbi_image_free(data);
 
 	unsigned int indices[] = { // note that we start from 0!
 		0, 1, 3, // first triangle
@@ -324,7 +324,7 @@ int main()
 		lightingShader.setVec3("viewPos", camera.Position);
 
 		lightingShader.setInt("material.diffuse", 0);
-		lightingShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+		lightingShader.setInt("material.specular", 1);
 		lightingShader.setFloat("material.shininess", 32.0f);
 
 		lightingShader.setVec3("light.position", lightPos);
@@ -342,6 +342,9 @@ int main()
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, containerTexture);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, specularTexture);
 
 		// Bind the vertex array object for rendering
 		glBindVertexArray(cubeVAO);
