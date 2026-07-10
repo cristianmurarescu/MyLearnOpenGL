@@ -361,6 +361,8 @@ int main()
 		model = glm::scale(model, glm::vec3(0.2f));
 		lightCubeShader.setMat4("model", model);
 
+		lightCubeShader.setVec3("lightColor", lightColor);
+
 		glBindVertexArray(lightVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
